@@ -15,6 +15,22 @@ const StyledContentEditable = styled(ContentEditable)(
         border: 1px solid ${theme.palette.primary.main};
         border-bottom-left-radius: 10px;
         border-bottom-right-radius: 10px;
+
+        .editor-code: {
+            background-color: red !important;
+            font-family: Menlo, Consolas, Monaco, monospace;
+            display: block;
+            padding: 8px 8px 8px 52px;
+            line-height: 1.53;
+            font-size: 13px;
+            margin: 0;
+            margin-top: 8px;
+            margin-bottom: 8px;
+            tab-size: 2;
+            /* white-space: pre; */
+            overflow-x: auto;
+            position: relative;
+        }
 `
 );
 

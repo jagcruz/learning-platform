@@ -18,6 +18,7 @@ import Box from '@mui/material/Box';
 
 import lexicalTheme from './theme';
 import Placeholder from './Placeholder';
+import CssGlobal from './CssGlobal';
 import ContentEditable from './StyledContentEditable';
 import AutoLinkPlugin from './plugins/AutoLinkPlugin';
 import CodeHighlightPlugin from './plugins/CodeHighlightPlugin';
@@ -54,6 +55,7 @@ const LexicalRichEditor: FC<LexicalEditorProps> = ({ namespace, debug }) => {
                 ]
             }}
         >
+            <CssGlobal />
             <Box
                 id='editor-container'
                 margin='20px auto 20px auto'

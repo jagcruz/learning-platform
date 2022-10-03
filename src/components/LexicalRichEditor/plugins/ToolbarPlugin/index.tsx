@@ -324,11 +324,10 @@ const ToolbarPlugin: FC = () => {
                         </IconButton>
                     </Tooltip>
 
-                    {isLink &&
-                        createPortal(
-                            <FloatingLinkEditor editor={editor} />,
-                            document.body
-                        )}
+                    {isLink && (
+                        // createPortal(<FloatingLinkEditor editor={editor} />,document.body)
+                        <FloatingLinkEditor editor={editor} />
+                    )}
 
                     <Divider flexItem orientation='vertical' sx={{ mx: 0.5 }} />
 
