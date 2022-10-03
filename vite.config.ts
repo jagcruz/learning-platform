@@ -6,7 +6,6 @@ import svgr from 'vite-plugin-svgr';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    base: '/learning-platform/',
     plugins: [react(), svgr({ include: 'src/**/*.svg' })],
     resolve: {
         alias: {
