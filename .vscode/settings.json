@@ -1,0 +1,15 @@
+{
+    "editor.codeActionsOnSave": ["source.formatDocument", "source.fixAll.eslint"],
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnPaste": false,
+    "editor.formatOnSave": true,
+    "eslint.packageManager": "yarn",
+    "eslint.workingDirectories": ["src", "tests"],
+    "files.eol": "\n",
+    "prettier.configPath": ".prettierrc",
+    "svg.preview.background": "transparent",
+    "vite.autoStart": false,
+    "vite.buildCommand": "yarn build",
+    "vite.showTerminal": true,
+    "vite.port": 3000
+}

@@ -1,0 +1,8 @@
+{
+    "name": "JAGC's Learning Platform",
+    "short_name": "JAGC's LP",
+    "start_url": "/",
+    "display": "standalone",
+    "orientation": "portrait",
+    "background_color": "#fff"
+}
