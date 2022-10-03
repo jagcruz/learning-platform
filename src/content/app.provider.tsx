@@ -1,6 +1,6 @@
 import type { FC, ReactNode } from 'react';
 import { StrictMode } from 'react';
-import { HashRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { SnackbarProvider } from 'notistack';
 import Zoom from '@mui/material/Zoom';
 
@@ -19,7 +19,7 @@ const AppProvider: FC<AppProviderProps> = ({ children }) => {
 
     return (
         <StrictMode>
-            <HashRouter>
+            <BrowserRouter>
                 <SnackbarProvider
                     maxSnack={6}
                     anchorOrigin={{
@@ -30,7 +30,7 @@ const AppProvider: FC<AppProviderProps> = ({ children }) => {
                 >
                     {children}
                 </SnackbarProvider>
-            </HashRouter>
+            </BrowserRouter>
         </StrictMode>
     );
 };
