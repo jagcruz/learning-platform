@@ -1,6 +1,5 @@
 import type { FC } from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
 
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import {
@@ -21,8 +20,9 @@ import { $isListNode, ListNode } from '@lexical/list';
 import { $isHeadingNode } from '@lexical/rich-text';
 import { $isCodeNode, getDefaultCodeLanguage } from '@lexical/code';
 
-import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
+import Hidden from '@mui/material/Hidden';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 
@@ -40,14 +40,16 @@ import UnderlinedIcon from '@mui/icons-material/FormatUnderlined';
 import UndoIcon from '@mui/icons-material/Undo';
 
 import type { BlockType } from './BlockOptions';
-import { getSelectedNode } from './utils';
+import { getSelectedNode, LOW_PRIORITY } from './utils';
 import BlockOptions, { SUPPORTED_BLOCK_TYPES } from './BlockOptions';
 import FloatingLinkEditor from './FloatingLinkEditor';
 import CodeLangSelector from './CodeLangSelector';
 
-const LowPriority = 1;
+interface ToolbarPluginProps {
+    editable?: boolean;
+}
 
-const ToolbarPlugin: FC = () => {
+const ToolbarPlugin: FC<ToolbarPluginProps> = ({ editable }) => {
     const [editor] = useLexicalComposerContext();
     const toolbarRef = useRef(null);
     const [canUndo, setCanUndo] = useState(false);
@@ -131,7 +133,7 @@ const ToolbarPlugin: FC = () => {
                     updateToolbar();
                     return false;
                 },
-                LowPriority
+                LOW_PRIORITY
             ),
             editor.registerCommand(
                 CAN_UNDO_COMMAND,
@@ -139,7 +141,7 @@ const ToolbarPlugin: FC = () => {
                     setCanUndo(payload);
                     return false;
                 },
-                LowPriority
+                LOW_PRIORITY
             ),
             editor.registerCommand(
                 CAN_REDO_COMMAND,
@@ -147,7 +149,7 @@ const ToolbarPlugin: FC = () => {
                     setCanRedo(payload);
                     return false;
                 },
-                LowPriority
+                LOW_PRIORITY
             )
         );
     }, [editor, updateToolbar]);
@@ -176,214 +178,244 @@ const ToolbarPlugin: FC = () => {
     }, [editor, isLink]);
 
     return (
-        <Box
+        <Grid
             id='toolbar'
             ref={toolbarRef}
-            display='flex'
+            container
             alignItems='center'
+            justifyContent='center'
             p={1}
             border={1}
             borderColor='primary.main'
             bgcolor='background.paper'
+            width='100%'
             sx={{
                 borderTopLeftRadius: 10,
                 borderTopRightRadius: 10
             }}
         >
-            <Tooltip arrow title='Undo'>
-                <span>
-                    <IconButton
-                        aria-label='Undo'
-                        size='small'
-                        onClick={() => {
-                            editor.dispatchCommand(UNDO_COMMAND, null);
-                        }}
-                        disabled={!canUndo}
-                        color={canUndo ? 'primary' : 'default'}
-                        sx={{ mr: 0.5 }}
-                    >
-                        <UndoIcon fontSize='small' />
-                    </IconButton>
-                </span>
-            </Tooltip>
+            <Grid item sx={{ display: 'flex', justifyContent: 'center' }}>
+                <Tooltip arrow title='Undo'>
+                    <span>
+                        <IconButton
+                            aria-label='Undo'
+                            size='small'
+                            onClick={() => {
+                                editor.dispatchCommand(UNDO_COMMAND, null);
+                            }}
+                            disabled={!canUndo}
+                            color={canUndo ? 'primary' : 'default'}
+                            sx={{ mr: 0.5 }}
+                        >
+                            <UndoIcon fontSize='small' />
+                        </IconButton>
+                    </span>
+                </Tooltip>
 
-            <Tooltip arrow title='Redo'>
-                <span>
-                    <IconButton
-                        aria-label='Redo'
-                        size='small'
-                        onClick={() => {
-                            editor.dispatchCommand(REDO_COMMAND, null);
-                        }}
-                        disabled={!canRedo}
-                        color={canRedo ? 'primary' : 'default'}
-                    >
-                        <RedoIcon fontSize='small' />
-                    </IconButton>
-                </span>
-            </Tooltip>
+                <Tooltip arrow title='Redo'>
+                    <span>
+                        <IconButton
+                            aria-label='Redo'
+                            size='small'
+                            onClick={() => {
+                                editor.dispatchCommand(REDO_COMMAND, null);
+                            }}
+                            disabled={!canRedo}
+                            color={canRedo ? 'primary' : 'default'}
+                        >
+                            <RedoIcon fontSize='small' />
+                        </IconButton>
+                    </span>
+                </Tooltip>
+            </Grid>
 
             <Divider flexItem orientation='vertical' sx={{ mx: 0.5 }} />
 
             {SUPPORTED_BLOCK_TYPES.has(blockType) && (
                 <>
-                    <BlockOptions blockType={blockType} editor={editor} />
+                    <Grid item sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <BlockOptions blockType={blockType} editor={editor} />
+                    </Grid>
 
-                    <Divider flexItem orientation='vertical' sx={{ mx: 0.5 }} />
+                    <Hidden smDown>
+                        <Divider flexItem orientation='vertical' sx={{ mx: 0.5 }} />
+                    </Hidden>
                 </>
             )}
 
             {blockType === 'code' ? (
-                <CodeLangSelector
-                    onChange={onCodeLanguageSelect}
-                    codeLanguage={codeLanguage}
-                />
+                <Grid item xs sm md lg xl>
+                    <CodeLangSelector
+                        onChange={onCodeLanguageSelect}
+                        codeLanguage={codeLanguage}
+                    />
+                </Grid>
             ) : (
                 <>
-                    <Tooltip arrow title='Format Bold'>
-                        <IconButton
-                            aria-label='Format Bold'
-                            size='small'
-                            onClick={() => {
-                                editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold');
-                            }}
-                            color={isBold ? 'primary' : 'default'}
-                            sx={{ mr: 0.5 }}
-                        >
-                            <BoldIcon fontSize='small' />
-                        </IconButton>
-                    </Tooltip>
+                    <Grid item>
+                        <Tooltip arrow title='Format Bold'>
+                            <IconButton
+                                aria-label='Format Bold'
+                                size='small'
+                                onClick={() => {
+                                    editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold');
+                                }}
+                                color={isBold ? 'primary' : 'default'}
+                                sx={{ mr: 0.5 }}
+                            >
+                                <BoldIcon fontSize='small' />
+                            </IconButton>
+                        </Tooltip>
 
-                    <Tooltip arrow title='Format Italics'>
-                        <IconButton
-                            aria-label='Format Italics'
-                            size='small'
-                            onClick={() => {
-                                editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'italic');
-                            }}
-                            color={isItalic ? 'primary' : 'default'}
-                            sx={{ mr: 0.5 }}
-                        >
-                            <ItalicIcon fontSize='small' />
-                        </IconButton>
-                    </Tooltip>
+                        <Tooltip arrow title='Format Italics'>
+                            <IconButton
+                                aria-label='Format Italics'
+                                size='small'
+                                onClick={() => {
+                                    editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'italic');
+                                }}
+                                color={isItalic ? 'primary' : 'default'}
+                                sx={{ mr: 0.5 }}
+                            >
+                                <ItalicIcon fontSize='small' />
+                            </IconButton>
+                        </Tooltip>
 
-                    <Tooltip arrow title='Format Underline'>
-                        <IconButton
-                            aria-label='Format Underline'
-                            size='small'
-                            onClick={() => {
-                                editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'underline');
-                            }}
-                            color={isUnderline ? 'primary' : 'default'}
-                            sx={{ mr: 0.5 }}
-                        >
-                            <UnderlinedIcon fontSize='small' />
-                        </IconButton>
-                    </Tooltip>
+                        <Tooltip arrow title='Format Underline'>
+                            <IconButton
+                                aria-label='Format Underline'
+                                size='small'
+                                onClick={() => {
+                                    editor.dispatchCommand(
+                                        FORMAT_TEXT_COMMAND,
+                                        'underline'
+                                    );
+                                }}
+                                color={isUnderline ? 'primary' : 'default'}
+                                sx={{ mr: 0.5 }}
+                            >
+                                <UnderlinedIcon fontSize='small' />
+                            </IconButton>
+                        </Tooltip>
 
-                    <Tooltip arrow title='Format Strikethrough'>
-                        <IconButton
-                            aria-label='Format Strikethrough'
-                            size='small'
-                            onClick={() => {
-                                editor.dispatchCommand(
-                                    FORMAT_TEXT_COMMAND,
-                                    'strikethrough'
-                                );
-                            }}
-                            color={isStrikethrough ? 'primary' : 'default'}
-                            sx={{ mr: 0.5 }}
-                        >
-                            <StrikethroughIcon fontSize='small' />
-                        </IconButton>
-                    </Tooltip>
+                        <Tooltip arrow title='Format Strikethrough'>
+                            <IconButton
+                                aria-label='Format Strikethrough'
+                                size='small'
+                                onClick={() => {
+                                    editor.dispatchCommand(
+                                        FORMAT_TEXT_COMMAND,
+                                        'strikethrough'
+                                    );
+                                }}
+                                color={isStrikethrough ? 'primary' : 'default'}
+                                sx={{ mr: 0.5 }}
+                            >
+                                <StrikethroughIcon fontSize='small' />
+                            </IconButton>
+                        </Tooltip>
 
-                    <Tooltip arrow title='Insert Code'>
-                        <IconButton
-                            aria-label='Insert Code'
-                            size='small'
-                            onClick={() => {
-                                editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'code');
-                            }}
-                            color={isCode ? 'primary' : 'default'}
-                            sx={{ mr: 0.5 }}
-                        >
-                            <CodeIcon fontSize='small' />
-                        </IconButton>
-                    </Tooltip>
+                        <Tooltip arrow title='Insert Code'>
+                            <IconButton
+                                aria-label='Insert Code'
+                                size='small'
+                                onClick={() => {
+                                    editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'code');
+                                }}
+                                color={isCode ? 'primary' : 'default'}
+                                sx={{ mr: 0.5 }}
+                            >
+                                <CodeIcon fontSize='small' />
+                            </IconButton>
+                        </Tooltip>
 
-                    <Tooltip arrow title='Insert Link'>
-                        <IconButton
-                            aria-label='Insert Link'
-                            size='small'
-                            onClick={insertLink}
-                            color={isLink ? 'primary' : 'default'}
-                        >
-                            <LinkIcon fontSize='small' />
-                        </IconButton>
-                    </Tooltip>
+                        <Tooltip arrow title='Insert Link'>
+                            <IconButton
+                                aria-label='Insert Link'
+                                size='small'
+                                onClick={insertLink}
+                                color={isLink ? 'primary' : 'default'}
+                            >
+                                <LinkIcon fontSize='small' />
+                            </IconButton>
+                        </Tooltip>
 
-                    {isLink && (
-                        // createPortal(<FloatingLinkEditor editor={editor} />,document.body)
-                        <FloatingLinkEditor editor={editor} />
-                    )}
+                        {isLink && (
+                            <FloatingLinkEditor editor={editor} editable={editable} />
+                        )}
+                    </Grid>
 
-                    <Divider flexItem orientation='vertical' sx={{ mx: 0.5 }} />
+                    <Hidden smDown>
+                        <Divider flexItem orientation='vertical' sx={{ mx: 0.5 }} />
+                    </Hidden>
 
-                    <Tooltip arrow title='Left Align'>
-                        <IconButton
-                            aria-label='Left Align'
-                            size='small'
-                            onClick={() => {
-                                editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'left');
-                            }}
-                            sx={{ mr: 0.5 }}
-                        >
-                            <AlignLeftIcon fontSize='small' />
-                        </IconButton>
-                    </Tooltip>
+                    <Grid item>
+                        <Tooltip arrow title='Left Align'>
+                            <IconButton
+                                aria-label='Left Align'
+                                size='small'
+                                onClick={() => {
+                                    editor.dispatchCommand(
+                                        FORMAT_ELEMENT_COMMAND,
+                                        'left'
+                                    );
+                                }}
+                                sx={{ mr: 0.5 }}
+                            >
+                                <AlignLeftIcon fontSize='small' />
+                            </IconButton>
+                        </Tooltip>
 
-                    <Tooltip arrow title='Center Align'>
-                        <IconButton
-                            aria-label='Center Align'
-                            size='small'
-                            onClick={() => {
-                                editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'center');
-                            }}
-                            sx={{ mr: 0.5 }}
-                        >
-                            <AlignCenterIcon fontSize='small' />
-                        </IconButton>
-                    </Tooltip>
+                        <Tooltip arrow title='Center Align'>
+                            <IconButton
+                                aria-label='Center Align'
+                                size='small'
+                                onClick={() => {
+                                    editor.dispatchCommand(
+                                        FORMAT_ELEMENT_COMMAND,
+                                        'center'
+                                    );
+                                }}
+                                sx={{ mr: 0.5 }}
+                            >
+                                <AlignCenterIcon fontSize='small' />
+                            </IconButton>
+                        </Tooltip>
 
-                    <Tooltip arrow title='Right Align'>
-                        <IconButton
-                            aria-label='Right Align'
-                            size='small'
-                            onClick={() => {
-                                editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'right');
-                            }}
-                            sx={{ mr: 0.5 }}
-                        >
-                            <AlignRightIcon fontSize='small' />
-                        </IconButton>
-                    </Tooltip>
+                        <Tooltip arrow title='Right Align'>
+                            <IconButton
+                                aria-label='Right Align'
+                                size='small'
+                                onClick={() => {
+                                    editor.dispatchCommand(
+                                        FORMAT_ELEMENT_COMMAND,
+                                        'right'
+                                    );
+                                }}
+                                sx={{ mr: 0.5 }}
+                            >
+                                <AlignRightIcon fontSize='small' />
+                            </IconButton>
+                        </Tooltip>
 
-                    <Tooltip arrow title='Justify Align'>
-                        <IconButton
-                            aria-label='Justify Align'
-                            size='small'
-                            onClick={() => {
-                                editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'justify');
-                            }}
-                        >
-                            <AlignJustifyIcon fontSize='small' />
-                        </IconButton>
-                    </Tooltip>
+                        <Tooltip arrow title='Justify Align'>
+                            <IconButton
+                                aria-label='Justify Align'
+                                size='small'
+                                onClick={() => {
+                                    editor.dispatchCommand(
+                                        FORMAT_ELEMENT_COMMAND,
+                                        'justify'
+                                    );
+                                }}
+                            >
+                                <AlignJustifyIcon fontSize='small' />
+                            </IconButton>
+                        </Tooltip>
+                    </Grid>
                 </>
             )}
-        </Box>
+        </Grid>
     );
 };
 

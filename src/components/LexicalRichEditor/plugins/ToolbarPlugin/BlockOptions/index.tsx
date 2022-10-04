@@ -81,18 +81,85 @@ const BlockOptions: FC<BlockOptionsProps> = ({ blockType, editor }) => {
 
                 <Divider sx={{ my: 0.5 }} />
 
-                {Array.from(SUPPORTED_BLOCK_TYPES).map((option) => {
-                    const Item = BlockItems[option];
+                {SUPPORTED_BLOCK_TYPES.has('paragraph') && (
+                    <BlockItems.paragraph
+                        blockType={blockType}
+                        editor={editor}
+                        onCloseMenu={handleCloseMenu}
+                    />
+                )}
 
-                    return (
-                        <Item
-                            key={`opt-${blockType}`}
-                            blockType={blockType}
-                            editor={editor}
-                            onCloseMenu={handleCloseMenu}
-                        />
-                    );
-                })}
+                {SUPPORTED_BLOCK_TYPES.has('h1') && (
+                    <BlockItems.h1
+                        blockType={blockType}
+                        editor={editor}
+                        onCloseMenu={handleCloseMenu}
+                    />
+                )}
+
+                {SUPPORTED_BLOCK_TYPES.has('h2') && (
+                    <BlockItems.h2
+                        blockType={blockType}
+                        editor={editor}
+                        onCloseMenu={handleCloseMenu}
+                    />
+                )}
+
+                {SUPPORTED_BLOCK_TYPES.has('h3') && (
+                    <BlockItems.h3
+                        blockType={blockType}
+                        editor={editor}
+                        onCloseMenu={handleCloseMenu}
+                    />
+                )}
+
+                {SUPPORTED_BLOCK_TYPES.has('h4') && (
+                    <BlockItems.h4
+                        blockType={blockType}
+                        editor={editor}
+                        onCloseMenu={handleCloseMenu}
+                    />
+                )}
+
+                {SUPPORTED_BLOCK_TYPES.has('h5') && (
+                    <BlockItems.h5
+                        blockType={blockType}
+                        editor={editor}
+                        onCloseMenu={handleCloseMenu}
+                    />
+                )}
+
+                {SUPPORTED_BLOCK_TYPES.has('ul') && (
+                    <BlockItems.ul
+                        blockType={blockType}
+                        editor={editor}
+                        onCloseMenu={handleCloseMenu}
+                    />
+                )}
+
+                {SUPPORTED_BLOCK_TYPES.has('ol') && (
+                    <BlockItems.ol
+                        blockType={blockType}
+                        editor={editor}
+                        onCloseMenu={handleCloseMenu}
+                    />
+                )}
+
+                {SUPPORTED_BLOCK_TYPES.has('quote') && (
+                    <BlockItems.quote
+                        blockType={blockType}
+                        editor={editor}
+                        onCloseMenu={handleCloseMenu}
+                    />
+                )}
+
+                {SUPPORTED_BLOCK_TYPES.has('code') && (
+                    <BlockItems.code
+                        blockType={blockType}
+                        editor={editor}
+                        onCloseMenu={handleCloseMenu}
+                    />
+                )}
             </Menu>
         </Box>
     );

@@ -28,10 +28,17 @@ import TreeViewPlugin from './plugins/TreeViewPlugin';
 
 interface LexicalEditorProps {
     namespace: string;
+    placeholder?: string;
+    editable?: boolean;
     debug?: boolean;
 }
 
-const LexicalRichEditor: FC<LexicalEditorProps> = ({ namespace, debug }) => {
+const LexicalRichEditor: FC<LexicalEditorProps> = ({
+    namespace,
+    placeholder,
+    editable,
+    debug
+}) => {
     return (
         <LexicalComposer
             initialConfig={{
@@ -71,12 +78,12 @@ const LexicalRichEditor: FC<LexicalEditorProps> = ({ namespace, debug }) => {
                     borderTopRightRadius: 10
                 }}
             >
-                <ToolbarPlugin />
+                <ToolbarPlugin editable={editable} />
 
                 <Box id='editor-inner' bgcolor='#fff' position='relative'>
                     <RichTextPlugin
                         contentEditable={<ContentEditable />}
-                        placeholder={<Placeholder />}
+                        placeholder={<Placeholder text={placeholder} />}
                     />
                     <HistoryPlugin />
 

@@ -1,7 +1,14 @@
 import type { FC } from 'react';
+import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
 
-const Placeholder: FC = () => {
+interface PlaceholderProps {
+    text?: string;
+}
+
+const Placeholder: FC<PlaceholderProps> = ({ text }) => {
+    const { t } = useTranslation();
+
     return (
         <Box
             id='editor-placeholder'
@@ -18,7 +25,7 @@ const Placeholder: FC = () => {
                 pointerEvents: 'none'
             }}
         >
-            Enter some rich text...
+            {`${t(text ?? 'Enter some text')}...`}
         </Box>
     );
 };

@@ -43,9 +43,9 @@ export const BLOCK_TYPE_NAMES: Record<BlockType, string> = {
     quote: 'Quote',
     h1: 'Large Heading',
     h2: 'Small Heading',
-    h3: 'Heading',
-    h4: 'Heading',
-    h5: 'Heading',
+    h3: 'Heading 3',
+    h4: 'Heading 4',
+    h5: 'Heading 5',
     ol: 'Numbered List',
     ul: 'Bulleted List'
 };

@@ -28,7 +28,7 @@ const LexicalPage: FC = () => {
                 />
             </FormGroup>
 
-            <LexicalEditor namespace='MaterialRich' debug={debug} />
+            <LexicalEditor namespace='MaterialRich' editable debug={debug} />
 
             <Box className='other'>
                 <Typography variant='overline'>Other Examples</Typography>
