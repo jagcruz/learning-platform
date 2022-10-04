@@ -190,6 +190,7 @@ const ToolbarPlugin: FC<ToolbarPluginProps> = ({ editable }) => {
             bgcolor='background.paper'
             width='100%'
             sx={{
+                display: editable ? 'flex' : 'none',
                 borderTopLeftRadius: 10,
                 borderTopRightRadius: 10
             }}
